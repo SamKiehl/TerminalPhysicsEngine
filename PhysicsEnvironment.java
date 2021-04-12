@@ -114,6 +114,5 @@ public class PhysicsEnvironment{
         //pe.iterate();
         pe.placeObject(40, pe.board.length - 10, air);
         pe.iterate(20);
-        System.out.println("Test");
     }
 }
