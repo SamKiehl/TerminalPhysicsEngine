@@ -114,7 +114,6 @@ public class PhysicsEnvironment{
         //pe.iterate();
         pe.placeObject(40, pe.board.length - 10, air);
         pe.iterate(20);
-        // new
-        // school computer test
+        // after school test
     }
 }
