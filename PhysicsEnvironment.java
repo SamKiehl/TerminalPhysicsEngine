@@ -2,7 +2,7 @@ public class PhysicsEnvironment{
     private int x;
     private int y;
     private PhysicsObject[][] board;
-    private boolean[][] iteratedGrav, iteratedDx, iteratedDy;
+    private boolean[][] iteratedGrav, iteratedDxR, iteratedDxL;
 
     public PhysicsEnvironment(int x, int y){ // Constructor (width, height)
         this.x = x;
@@ -15,10 +15,13 @@ public class PhysicsEnvironment{
     public void instantiate(){ // Fills the given PhysicsEnvironment with "air" PhysicsObjects ('', no gravity)
         this.fillAllIndexes(PhysicsObject.air);
     }
+
     public void iterate(){ // Iterates the given PhysicsEnvironment's physics by 1 frame
         this.iteratedGrav = new boolean[this.y][this.x];
-        this.iteratedDx = new boolean[this.y][this.x];
+        this.iteratedDxR = new boolean[this.y][this.x];
+        this.iteratedDxL = new boolean[this.y][this.x];
         boolean changed = false;
+        boolean movedH = false;
         
         for(int i = 0; i < this.board.length; i++){ // test
             changed = false;
@@ -28,25 +31,39 @@ public class PhysicsEnvironment{
                     this.iteratedGrav[i + 1][j] = true;
                     changed = true;
                 }
-                if(!this.iteratedDx[i][j] && this.board[i][j].getDisp() != ' ' && this.board[i][j].getDx() > 0 && j != x - 1 && this.board[i][j + 1].getDisp() == ' '){
+                if(!this.iteratedDxR[i][j] && this.board[i][j].getDx() > 0 && j < x - 1 && this.board[i][j + 1].getDisp() == ' '){
                     //move right
                     this.move(j, i, j + 1, i);
-                    this.iteratedDx[i][j + 1] = true;
+                    this.iteratedDxR[i][j + 1] = true;
                     //set dx = (dx - 1)
                     this.board[i][j].setDx(0);
                     this.board[i][j + 1].setDx(this.board[i][j + 1].getDx() - 1);
                     changed = true;
+                    movedH = true;
+                }
+                if(!this.iteratedDxL[i][j] && this.board[i][j].getDx() < 0 && j > 0 && this.board[i][j - 1].getDisp() == ' '){
+                    //move left
+                    this.move(j, i, j - 1, i);
+                    this.iteratedDxL[i][j - 1] = true;
+                    //set dx = (dx - 1)
+                    this.board[i][j].setDx(0);
+                    this.board[i][j - 1].setDx(this.board[i][j - 1].getDx() + 1);
+                    changed = true;
+                    movedH = true;
                 }
             }
             if(changed){
                 System.out.println(this);
+                try{Thread.sleep(200);}catch(Exception e){System.out.println("An Error occurred. (Thread.sleep)");}
             }
+            if(movedH)
+                break;
         }
     }
+
     public void iterate(int times){ // Iterates the given PhysicsEnvironment's physics 'times' times
         for(int i = 0; i < times; i++){
             this.iterate();
-            try{Thread.sleep(200);}catch(Exception e){System.out.println("An Error occurred. (Thread.sleep)");}
         }
     }
 
@@ -112,6 +129,7 @@ public class PhysicsEnvironment{
         PhysicsObject rock = PhysicsObject.rock;
         
         pe.fillRow(pe.board.length - 1, sand);
+        
         pe.fillRow(0, sand);
         pe.fillRow(1, sand);
 
@@ -144,12 +162,13 @@ public class PhysicsEnvironment{
 
 
         
-        //pe.placeObject(40, pe.board.length - 10, air);
+        pe.placeObject(40, pe.board.length - 10, air);
 
-        for(int i = 0; i < 10; i++){
-            System.out.println(pe.board[35][22].getDx());
-            pe.iterate();
-        }
-        // after school test 
+        pe.iterate(11);
+
+        PhysicsObject o = new PhysicsObject('o', true, -10, 0);
+
+        pe.placeObject(50, pe.board.length -10, o);
+        pe.iterate(20);
     }
 }
