@@ -43,7 +43,15 @@ public class PhysicsObject {
 
     public void setDy(int dy){this.dy = dy;}
 
+    //public void reverseDy(){}
+
     public int getDx(){return this.dx;}
 
     public void setDx(int dx){this.dx = dx;}
+
+    public void reverseDx(){
+        this.dx *= -1;
+    }
+
+
 }

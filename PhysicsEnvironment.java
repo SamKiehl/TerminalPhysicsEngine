@@ -101,6 +101,30 @@ public class PhysicsEnvironment{
         this.board[row][col].setDy(dy);
     }
 
+    public void reverseDx(){
+        for(int i = 0; i < this.y; i++){
+            for(int j = 0; j < this.x; j++){
+                this.board[i][j].reverseDx();
+            }
+        }
+    }
+
+    public void reverseDx(int x, int y){
+        this.board[y][x].reverseDx();
+    }
+
+    public void stopDx(){
+        for(int i = 0; i < this.y; i++){
+            for(int j = 0; j < this.x; j++){
+                this.board[i][j].setDx(0);
+            }
+        }
+    }
+
+    public void stopDx(int x, int y){
+        this.board[y][x].setDx(0);
+    }
+
     public void set(int col, int row, PhysicsObject po){
         this.board[row][col] = po;
     }
@@ -168,7 +192,9 @@ public class PhysicsEnvironment{
 
         PhysicsObject o = new PhysicsObject('o', true, -10, 0);
 
-        pe.placeObject(50, pe.board.length -10, o);
-        pe.iterate(20);
+        pe.placeObject(40, pe.board.length -10, o);
+        pe.iterate(5);
+        pe.reverseDx();
+        pe.iterate(10);
     }
 }
